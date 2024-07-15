@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+
 }
 
 android {
@@ -35,6 +36,11 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
+
 }
 
 dependencies {
@@ -61,6 +67,16 @@ dependencies {
 
     //ViewModel Compose
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3")
+
+    //Glide
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    //okhttp
+    implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3")
+    implementation ("com.squareup.okhttp3:okhttp:5.0.0-alpha.3")
+
+    //serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
 
 }

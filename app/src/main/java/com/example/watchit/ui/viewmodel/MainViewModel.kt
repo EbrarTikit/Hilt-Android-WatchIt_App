@@ -23,6 +23,10 @@ class MainViewModel @Inject constructor(
     private val _mainItem = MutableStateFlow<UIState<Movies>>(UIState.Loading)
     val mainItem: StateFlow<UIState<Movies>> = _mainItem
 
+    init {
+        fetchMovies(page = 1)
+    }
+
     fun fetchMovies(page: Int) {
         viewModelScope.launch {
             try {
