@@ -1,4 +1,4 @@
-package com.example.watchit.ui.viewmodel
+package com.example.watchit.ui.movieList.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel

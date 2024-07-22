@@ -14,21 +14,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:background="@color/grey"
+        android:scaleType="center"
+        tools:src="@drawable/img"
         />
 
     <TextView
         android:id="@+id/mtv"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/img"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="8dp"
+        android:maxLines="2"
         android:text="Movie Name"
-        android:textStyle="bold"
-        android:textSize="20sp"
         android:textColor="@color/grey"
-        android:layout_marginStart="20dp"
-        />
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/img"
+        app:layout_constraintEnd_toStartOf="@+id/play"
+        app:layout_constraintStart_toEndOf="@+id/img"
+        app:layout_constraintTop_toTopOf="@+id/img" />
 
     <ImageView
         android:id="@+id/play"
@@ -40,6 +43,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginEnd="15dp"
         android:clickable="true"
+
         />
 
 
