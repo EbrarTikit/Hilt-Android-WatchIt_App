@@ -77,7 +77,7 @@ class MovieListFragment : Fragment() {
                         binding.progress.visibility = View.GONE
                         binding.error.visibility = View.VISIBLE
                         binding.rv.visibility = View.GONE
-                        binding.error.text = "Error: ${state.error.message}"
+                        binding.error.text = "Error:${state.error.message}"
                     }
 
                     else -> {}
