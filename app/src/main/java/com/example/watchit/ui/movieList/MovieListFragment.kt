@@ -28,67 +28,63 @@ class MovieListFragment : Fragment() {
 
     private val viewModel by viewModels<MainViewModel>()
     private lateinit var adapter: ListAdapter
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMovieListBinding.inflate(inflater,container,false)
-
-        setUpObservers()
-        setUpRecyclerV()
-
-        viewModel.fetchMovies(page = 1)
-
+        _binding = FragmentMovieListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupRecyclerView()
+        setupObservers()
     }
 
-    private fun setUpRecyclerV() {
-        binding.rv.layoutManager = LinearLayoutManager(context)
+    private fun setupRecyclerView() {
         adapter = ListAdapter(emptyList(), object : MovieClickListener {
             override fun onMovieClicked(movieId: Int?) {
                 movieId?.let {
                     val action = MovieListFragmentDirections.actionMovieListFragmentToDetailFragment(it)
-                    view?.let { view ->
-                        Navigation.findNavController(view).navigate(action)
-                    }
+                    findNavController().navigate(action)
                 }
             }
         })
         binding.rv.adapter = adapter
+        binding.rv.layoutManager = LinearLayoutManager(requireContext())
     }
 
-    private fun setUpObservers() {
-        lifecycleScope.launch {
+    private fun setupObservers() {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.mainItem.collect { state ->
-                if (_binding == null) return@collect
                 when (state) {
                     is UIState.Loading -> {
                         binding.progress.visibility = View.VISIBLE
-                        binding.error.visibility = View.GONE
                         binding.rv.visibility = View.GONE
+                        binding.error.visibility = View.GONE
                     }
                     is UIState.Success -> {
                         binding.progress.visibility = View.GONE
-                        binding.error.visibility = View.GONE
                         binding.rv.visibility = View.VISIBLE
+                        binding.error.visibility = View.GONE
                         adapter.updateList(state.data.results)
                     }
                     is UIState.Failure -> {
                         binding.progress.visibility = View.GONE
                         binding.error.visibility = View.VISIBLE
                         binding.rv.visibility = View.GONE
-                        binding.error.text = "Error:${state.error.message}"
+                        binding.error.text = "Error: ${state.error.message}"
                     }
-
-                    else -> {}
                 }
             }
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }
