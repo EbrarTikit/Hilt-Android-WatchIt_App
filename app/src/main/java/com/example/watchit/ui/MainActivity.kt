@@ -15,6 +15,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.watchit.R
 import com.example.watchit.common.UIState
@@ -32,8 +33,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
-    private val viewModel: MainViewModel by viewModels()
-    private lateinit var adapter: ListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,51 +47,17 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        navHostFragment = supportFragmentManager.findFragmentById(binding.navHostFragment.id) as NavHostFragment
-        navController = navHostFragment.findNavController()
+        // NavHostFragment ve NavController'ı ayarla
+        navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
+
+        // Bottom Navigation ile Navigation Controller'ı bağla
+        binding.bottomNavView.setupWithNavController(navController)
 
         setupActionBarWithNavController(navController)
-
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.nav_host_fragment, MovieListFragment())
-                .commit()
-        }
-
-        binding.bottomNavView.setOnNavigationItemSelectedListener { menuItem ->
-            when(menuItem.itemId) {
-                R.id.homeFragment -> {
-                    loadFragment(MovieListFragment())
-                    true
-                }
-                R.id.trendsFragment -> {
-                    loadFragment(MovieListFragment())
-                    true
-                }
-                R.id.watchListFragment -> {
-                    loadFragment(MovieListFragment())
-                    true
-                }
-                R.id.profileFragment -> {
-                    loadFragment(MovieListFragment())
-                    true
-                }
-                else -> false
-
-            }
-        }
-
-    }
-
-    private fun loadFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.nav_host_fragment, fragment)
-            .commit()
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return super.onSupportNavigateUp() || super.onSupportNavigateUp()
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
-
-
 }

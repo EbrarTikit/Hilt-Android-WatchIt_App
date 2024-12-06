@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.navigation.fragment.findNavController
@@ -45,19 +46,21 @@ class MovieListFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
     private fun setUpRecyclerV() {
         binding.rv.layoutManager = LinearLayoutManager(context)
         adapter = ListAdapter(emptyList(), object : MovieClickListener {
             override fun onMovieClicked(movieId: Int?) {
                 movieId?.let {
                     val action = MovieListFragmentDirections.actionMovieListFragmentToDetailFragment(it)
-                    findNavController().navigate(action)
+                    view?.let { view ->
+                        Navigation.findNavController(view).navigate(action)
+                    }
                 }
             }
         })
         binding.rv.adapter = adapter
     }
-
 
     private fun setUpObservers() {
         lifecycleScope.launch {
