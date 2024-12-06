@@ -58,9 +58,11 @@ class MovieListFragment : Fragment() {
         binding.rv.adapter = adapter
     }
 
+
     private fun setUpObservers() {
         lifecycleScope.launch {
             viewModel.mainItem.collect { state ->
+                if (_binding == null) return@collect
                 when (state) {
                     is UIState.Loading -> {
                         binding.progress.visibility = View.VISIBLE

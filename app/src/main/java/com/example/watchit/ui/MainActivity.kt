@@ -7,6 +7,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.replace
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -17,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.watchit.R
 import com.example.watchit.common.UIState
 import com.example.watchit.databinding.ActivityMainBinding
+import com.example.watchit.ui.movieList.MovieListFragment
 import com.example.watchit.ui.movieList.adapter.ListAdapter
 import com.example.watchit.ui.movieList.adapter.MovieClickListener
 import com.example.watchit.ui.movieList.viewmodel.MainViewModel
@@ -50,7 +53,41 @@ class MainActivity : AppCompatActivity() {
 
         setupActionBarWithNavController(navController)
 
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.nav_host_fragment, MovieListFragment())
+                .commit()
+        }
 
+        binding.bottomNavView.setOnNavigationItemSelectedListener { menuItem ->
+            when(menuItem.itemId) {
+                R.id.homeFragment -> {
+                    loadFragment(MovieListFragment())
+                    true
+                }
+                R.id.trendsFragment -> {
+                    loadFragment(MovieListFragment())
+                    true
+                }
+                R.id.watchListFragment -> {
+                    loadFragment(MovieListFragment())
+                    true
+                }
+                R.id.profileFragment -> {
+                    loadFragment(MovieListFragment())
+                    true
+                }
+                else -> false
+
+            }
+        }
+
+    }
+
+    private fun loadFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.nav_host_fragment, fragment)
+            .commit()
     }
 
     override fun onSupportNavigateUp(): Boolean {

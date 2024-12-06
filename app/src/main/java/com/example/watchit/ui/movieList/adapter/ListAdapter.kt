@@ -8,7 +8,10 @@ interface MovieClickListener {
     fun onMovieClicked(movieId: Int?)
 }
 
-class ListAdapter(private var list: List<Result>, private val movieClickListener: MovieClickListener) : RecyclerView.Adapter<ListViewHolder>() {
+class ListAdapter(
+    private var list: List<Result>,
+    private val movieClickListener: MovieClickListener
+) : RecyclerView.Adapter<ListViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder = ListViewHolder(parent)
 
