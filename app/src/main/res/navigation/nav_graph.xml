@@ -26,6 +26,9 @@
         android:id="@+id/trendsFragment"
         android:name="com.example.watchit.ui.trends.TrendsFragment"
         android:label="TrendsFragment">
+        <action
+            android:id="@+id/action_trendsFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
     </fragment>
 
     <fragment

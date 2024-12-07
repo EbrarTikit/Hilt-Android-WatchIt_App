@@ -3,6 +3,7 @@ package com.example.watchit.ui.movieList.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.watchit.data.model.Result
+import com.example.watchit.data.model.TrendResult
 
 interface MovieClickListener {
     fun onMovieClicked(movieId: Int?)
@@ -30,4 +31,5 @@ class ListAdapter(
         list = newList
         notifyDataSetChanged()
     }
+
 }
