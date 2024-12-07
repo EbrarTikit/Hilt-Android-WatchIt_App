@@ -54,7 +54,6 @@ class MainActivity : AppCompatActivity() {
         // Bottom Navigation ile Navigation Controller'ı bağla
         binding.bottomNavView.setupWithNavController(navController)
 
-        setupActionBarWithNavController(navController)
     }
 
     override fun onSupportNavigateUp(): Boolean {
