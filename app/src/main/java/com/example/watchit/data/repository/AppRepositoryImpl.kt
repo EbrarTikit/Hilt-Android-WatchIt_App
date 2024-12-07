@@ -4,6 +4,7 @@ import android.app.Application
 import com.example.watchit.R
 import com.example.watchit.data.model.MovieDetail
 import com.example.watchit.data.model.Movies
+import com.example.watchit.data.model.TrendMovie
 import com.example.watchit.data.network.ApiInterface
 import com.example.watchit.domain.repository.AppRepository
 import retrofit2.Response
@@ -25,6 +26,10 @@ class AppRepositoryImpl @Inject constructor(
 
     override suspend fun getMovieDetail(movieId: Int): Response<MovieDetail> {
         return api.getMovieDetail(movieId)
+    }
+
+    override suspend fun getTrends(): Response<TrendMovie>{
+        return api.getTrends()
     }
 
 }
