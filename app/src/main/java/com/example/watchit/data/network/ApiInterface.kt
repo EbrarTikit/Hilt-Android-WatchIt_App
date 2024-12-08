@@ -24,12 +24,12 @@ interface ApiInterface {
     ): Response<Movies>
 
     companion object {
-        const val TOP_RATED = "/3/movie/top_rated"
-        const val DETAIL = "/3/movie/{movieId}"
-        const val TRENDS = "/3/movie/popular"
-        const val GET_TOKEN = "/3/authentication/token/new"
-        const val LOGIN ="/3/authentication/token/validate_with_login"
-        const val SESSION ="/3/authentication/session/new"
+        const val TOP_RATED = "3/movie/top_rated"
+        const val DETAIL = "3/movie/{movieId}"
+        const val TRENDS = "3/movie/popular"
+        const val GET_TOKEN = "3/authentication/token/new"
+        const val LOGIN ="3/authentication/token/validate_with_login"
+        const val SESSION ="3/authentication/session/new"
     }
 
     @GET(DETAIL)
@@ -43,7 +43,7 @@ interface ApiInterface {
         @Query("api_key") apiKey: String = Const.API_KEY
     ): Response<TrendMovie>
 
-    @POST(GET_TOKEN)
+    @GET(GET_TOKEN)
     suspend fun createRequestToken(
         @Query("api_key") apiKey: String = Const.API_KEY
     ): Response<RequestTokenResponse>

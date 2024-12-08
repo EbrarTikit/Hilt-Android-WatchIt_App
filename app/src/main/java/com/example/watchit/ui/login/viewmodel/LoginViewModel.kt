@@ -15,10 +15,10 @@ class LoginViewModel @Inject constructor(
     private val repository: AppRepository
 ) : ViewModel() {
 
-    private val _loginState = MutableStateFlow<UIState<SessionResponse>>(UIState.Loading)
+    private val _loginState = MutableStateFlow<UIState<SessionResponse>>(UIState.Success(SessionResponse(false, "")))
     val loginState: MutableStateFlow<UIState<SessionResponse>> = _loginState
 
-    fun login(username:String,password:String){
+    fun login(username:String, password:String) {
         viewModelScope.launch {
             _loginState.value = UIState.Loading
             try {
@@ -36,5 +36,4 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
-
 }
