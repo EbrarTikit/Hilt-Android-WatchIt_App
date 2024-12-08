@@ -13,7 +13,9 @@ import com.example.watchit.data.model.WatchListResponse
 import com.example.watchit.data.model.WatchlistRequest
 import com.example.watchit.data.network.ApiInterface
 import com.example.watchit.domain.repository.AppRepository
+import retrofit2.HttpException
 import retrofit2.Response
+import java.io.IOException
 import javax.inject.Inject
 
 //actual implementation of methods done here
@@ -74,12 +76,20 @@ class AppRepositoryImpl @Inject constructor(
                 return Result.failure(Exception("Failed to create session: $errorBody"))
             }
 
-            // 4. account id al
-            //shared preference ile id yi uygulama kapansada tutuyoruz.
+            // Session ID'yi kaydet
+            sessionResponse.body()?.sessionId?.let { sessionId ->
+                sharedPreferences.edit()
+                    .putString("SESSION_ID", sessionId)
+                    .apply()
+            }
+
+            // Account details'i al
             val accountResponse = api.getAccountDetails(sessionId = sessionResponse.body()?.sessionId!!)
             if (accountResponse.isSuccessful) {
                 val accountId = accountResponse.body()?.id
-                sharedPreferences.edit().putInt("ACCOUNT_ID",accountId ?: -1).apply()
+                sharedPreferences.edit()
+                    .putInt("ACCOUNT_ID", accountId ?: -1)
+                    .apply()
             } else {
                 val errorBody = accountResponse.errorBody()?.string()
                 return Result.failure(Exception("Failed to get account details: $errorBody"))
@@ -99,22 +109,28 @@ class AppRepositoryImpl @Inject constructor(
     override suspend fun addWatchlist(
         accountId: Int,
         sessionId: String,
-        movieId: Int,
         request: WatchlistRequest
     ): Response<WatchListResponse> {
         val accId = getAccountId() ?: accountId
-        try {
-            val response = api.addWatchList(accountId = accId, sessionId = sessionId, requestBody = request)
-            if (response.isSuccessful){
-                return response
-            }else {
-                throw Exception("Failed to add watchlist: ${response.errorBody()?.string()}")
+        return try {
+            api.addWatchList(
+                accountId = accId,
+                sessionId = sessionId,
+                requestBody = request
+            ).also { response ->
+                if (!response.isSuccessful) {
+                    throw HttpException(response)
+                }
             }
-        }catch (e: Exception){
-            throw Exception("Failed to add watchlist: ${e.message}")
+        } catch (e: HttpException) {
+            throw Exception("API Error: ${e.message}")
+        } catch (e: IOException) {
+            throw Exception("Network Error: ${e.message}")
+        } catch (e: Exception) {
+            throw Exception("Unknown Error: ${e.message}")
         }
-
     }
+
 
 
 }

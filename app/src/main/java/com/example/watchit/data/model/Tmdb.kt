@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Tmdb(
     @SerialName("avatar_path")
-    val avatarPath: Any
+    val avatarPath: String? = null
 )

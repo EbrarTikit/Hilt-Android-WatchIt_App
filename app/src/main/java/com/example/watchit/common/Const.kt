@@ -6,3 +6,8 @@ object Const {
     const val IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500"
     const val API_VERSION = "3"
 }
+
+object PreferenceKeys {
+    const val ACCOUNT_ID = "ACCOUNT_ID"
+    const val SESSION_ID = "SESSION_ID"
+}

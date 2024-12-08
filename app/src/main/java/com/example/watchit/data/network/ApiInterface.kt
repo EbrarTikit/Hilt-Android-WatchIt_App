@@ -33,7 +33,7 @@ interface ApiInterface {
         const val GET_TOKEN = "3/authentication/token/new"
         const val LOGIN ="3/authentication/token/validate_with_login"
         const val SESSION ="3/authentication/session/new"
-        const val ACCOUNT_DETAILS = "3/account/{account_id}"
+        const val ACCOUNT_DETAILS = "3/account"
         const val WATCH_LIST = "3/account/{account_id}/watchlist"
     }
 
