@@ -2,12 +2,15 @@ package com.example.watchit.data.repository
 
 import android.app.Application
 import com.example.watchit.R
+import com.example.watchit.data.model.AccountResponse
 import com.example.watchit.data.model.LoginRequest
 import com.example.watchit.data.model.MovieDetail
 import com.example.watchit.data.model.Movies
 import com.example.watchit.data.model.SessionRequest
 import com.example.watchit.data.model.SessionResponse
 import com.example.watchit.data.model.TrendMovie
+import com.example.watchit.data.model.WatchListResponse
+import com.example.watchit.data.model.WatchlistRequest
 import com.example.watchit.data.network.ApiInterface
 import com.example.watchit.domain.repository.AppRepository
 import retrofit2.Response
@@ -18,6 +21,8 @@ class AppRepositoryImpl @Inject constructor(
     private val api: ApiInterface,
     private val appContext: Application
 ): AppRepository{
+
+    private val sharedPreferences = appContext.getSharedPreferences("AppPrefs", Application.MODE_PRIVATE)
 
     init {
         val appName = appContext.getString(R.string.app_name)
@@ -69,10 +74,46 @@ class AppRepositoryImpl @Inject constructor(
                 return Result.failure(Exception("Failed to create session: $errorBody"))
             }
 
+            // 4. account id al
+            //shared preference ile id yi uygulama kapansada tutuyoruz.
+            val accountResponse = api.getAccountDetails(sessionId = sessionResponse.body()?.sessionId!!)
+            if (accountResponse.isSuccessful) {
+                val accountId = accountResponse.body()?.id
+                sharedPreferences.edit().putInt("ACCOUNT_ID",accountId ?: -1).apply()
+            } else {
+                val errorBody = accountResponse.errorBody()?.string()
+                return Result.failure(Exception("Failed to get account details: $errorBody"))
+            }
+
             Result.success(sessionResponse.body()!!)
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+    private fun getAccountId(): Int? {
+        val id = sharedPreferences.getInt("ACCOUNT_ID", -1)
+        return if (id == -1) null else id
+    }
+
+    override suspend fun addWatchlist(
+        accountId: Int,
+        sessionId: String,
+        movieId: Int,
+        request: WatchlistRequest
+    ): Response<WatchListResponse> {
+        val accId = getAccountId() ?: accountId
+        try {
+            val response = api.addWatchList(accountId = accId, sessionId = sessionId, requestBody = request)
+            if (response.isSuccessful){
+                return response
+            }else {
+                throw Exception("Failed to add watchlist: ${response.errorBody()?.string()}")
+            }
+        }catch (e: Exception){
+            throw Exception("Failed to add watchlist: ${e.message}")
+        }
+
     }
 
 
