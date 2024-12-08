@@ -40,25 +40,33 @@ class AppRepositoryImpl @Inject constructor(
             // 1. Request token al
             val tokenResponse = api.createRequestToken()
             if (!tokenResponse.isSuccessful) {
-                return Result.failure(Exception("Failed to create request token"))
+                val errorBody = tokenResponse.errorBody()?.string()
+                return Result.failure(Exception("Failed to create request token: $errorBody"))
             }
 
-            val requestToken = tokenResponse.body()?.requestToken ?: return Result.failure(Exception("Invalid token response"))
+            val requestToken = tokenResponse.body()?.requestToken 
+                ?: return Result.failure(Exception("Invalid token response"))
 
             // 2. Login ile token'ı doğrula
             val loginResponse = api.validateWithLogin(
-                request = LoginRequest(username, password, requestToken)
+                request = LoginRequest(
+                    username = username,
+                    password = password,
+                    requestToken = requestToken
+                )
             )
             if (!loginResponse.isSuccessful) {
-                return Result.failure(Exception("Login failed"))
+                val errorBody = loginResponse.errorBody()?.string()
+                return Result.failure(Exception("Login failed: $errorBody"))
             }
 
             // 3. Session oluştur
             val sessionResponse = api.createSession(
-                request = SessionRequest(requestToken)
+                request = SessionRequest(requestToken = requestToken)
             )
             if (!sessionResponse.isSuccessful) {
-                return Result.failure(Exception("Failed to create session"))
+                val errorBody = sessionResponse.errorBody()?.string()
+                return Result.failure(Exception("Failed to create session: $errorBody"))
             }
 
             Result.success(sessionResponse.body()!!)

@@ -1,38 +1,40 @@
 package com.example.watchit.data.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-
-data class Movies (
+@Serializable
+data class Movies(
     val page: Int,
     val results: List<Result>,
-    @SerializedName("total_pages")
+    @SerialName("total_pages")
     val totalPages: Int,
-    @SerializedName("total_results")
+    @SerialName("total_results")
     val totalResults: Int
 )
 
-data class Result (
+@Serializable
+data class Result(
     val adult: Boolean,
-    @SerializedName("backdrop_path")
+    @SerialName("backdrop_path")
     val backdropPath: String,
-    @SerializedName("genre_ids")
+    @SerialName("genre_ids")
     val genreIDS: List<Int>,
     val id: Int,
-    @SerializedName("original_language")
+    @SerialName("original_language")
     val originalLanguage: String,
-    @SerializedName("original_title")
+    @SerialName("original_title")
     val originalTitle: String,
     val overview: String,
     val popularity: Double,
-    @SerializedName("poster_path")
+    @SerialName("poster_path")
     val posterPath: String,
-    @SerializedName("release_date")
+    @SerialName("release_date")
     val releaseDate: String,
     val title: String,
     val video: Boolean,
-    @SerializedName("vote_average")
+    @SerialName("vote_average")
     val voteAverage: Double,
-    @SerializedName("vote_count")
+    @SerialName("vote_count")
     val voteCount: Int
 )

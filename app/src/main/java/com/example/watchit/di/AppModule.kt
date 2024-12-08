@@ -5,14 +5,16 @@ import com.example.watchit.common.Const
 import com.example.watchit.data.network.ApiInterface
 import com.example.watchit.data.repository.AppRepositoryImpl
 import com.example.watchit.domain.repository.AppRepository
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -21,29 +23,31 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit() : ApiInterface {
-        val retrofit = Retrofit
-            .Builder()
+    fun provideRetrofit(): ApiInterface {
+        val contentType = "application/json".toMediaType()
+        val json = Json {
+            ignoreUnknownKeys = true
+            coerceInputValues = true
+            isLenient = true
+        }
+
+        return Retrofit.Builder()
             .baseUrl(Const.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(json.asConverterFactory(contentType))
             .client(httpLoggingInterceptor())
             .build()
             .create(ApiInterface::class.java)
-
-        return retrofit
     }
-
 
     @Provides
     @Singleton
     fun provideRepository(apiInterface: ApiInterface, app: Application): AppRepository {
-        return AppRepositoryImpl(apiInterface,app)
+        return AppRepositoryImpl(apiInterface, app)
     }
 
-    //logcat kontrolü
     @Provides
     @Singleton
-    fun  httpLoggingInterceptor(): OkHttpClient {
+    fun httpLoggingInterceptor(): OkHttpClient {
         val logging = HttpLoggingInterceptor()
         logging.level = HttpLoggingInterceptor.Level.BODY
         return OkHttpClient.Builder()
