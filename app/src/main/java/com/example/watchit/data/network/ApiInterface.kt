@@ -1,6 +1,7 @@
 package com.example.watchit.data.network
 
 import com.example.watchit.common.Const
+import com.example.watchit.data.model.AccountResponse
 import com.example.watchit.data.model.LoginRequest
 import com.example.watchit.data.model.MovieDetail
 import com.example.watchit.data.model.Movies
@@ -8,6 +9,8 @@ import com.example.watchit.data.model.RequestTokenResponse
 import com.example.watchit.data.model.SessionRequest
 import com.example.watchit.data.model.SessionResponse
 import com.example.watchit.data.model.TrendMovie
+import com.example.watchit.data.model.WatchListResponse
+import com.example.watchit.data.model.WatchlistRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -30,6 +33,8 @@ interface ApiInterface {
         const val GET_TOKEN = "3/authentication/token/new"
         const val LOGIN ="3/authentication/token/validate_with_login"
         const val SESSION ="3/authentication/session/new"
+        const val ACCOUNT_DETAILS = "3/account"
+        const val WATCH_LIST = "3/account/{account_id}/watchlist"
     }
 
     @GET(DETAIL)
@@ -60,4 +65,17 @@ interface ApiInterface {
         @Body request: SessionRequest
     ): Response<SessionResponse>
 
+    @GET(ACCOUNT_DETAILS)
+    suspend fun getAccountDetails(
+        @Query("api_key") apiKey: String = Const.API_KEY,
+        @Query("session_id") sessionId: String
+    ): Response<AccountResponse>
+
+    @POST(WATCH_LIST)
+    suspend fun addWatchList(
+        @Path("account_id") accountId: Int,
+        @Query("api_key") apiKey: String = Const.API_KEY,
+        @Query("session_id") sessionId: String,
+        @Body requestBody: WatchlistRequest
+    ): Response<WatchListResponse>
 }

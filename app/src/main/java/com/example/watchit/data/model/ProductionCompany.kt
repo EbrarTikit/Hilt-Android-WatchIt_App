@@ -10,7 +10,7 @@ data class ProductionCompany(
     @SerialName("id")
     val id: Int,
     @SerialName("logo_path")
-    val logoPath: String,
+    val logoPath: String? = null,
     @SerialName("name")
     val name: String,
     @SerialName("origin_country")
