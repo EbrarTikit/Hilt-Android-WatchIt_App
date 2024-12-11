@@ -6,6 +6,7 @@ import com.example.watchit.data.model.AccountResponse
 import com.example.watchit.data.model.LoginRequest
 import com.example.watchit.data.model.MovieDetail
 import com.example.watchit.data.model.Movies
+import com.example.watchit.data.model.MyWatchListMovies
 import com.example.watchit.data.model.SessionRequest
 import com.example.watchit.data.model.SessionResponse
 import com.example.watchit.data.model.TrendMovie
@@ -131,6 +132,12 @@ class AppRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getWatchlist(
+        accountId: Int
+    ): Response<MyWatchListMovies> {
+        val accId = getAccountId() ?: accountId
+        return api.getMyWatchList(accId)
+    }
 
 
 }
