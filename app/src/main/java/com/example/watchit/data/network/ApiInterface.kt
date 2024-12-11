@@ -5,6 +5,7 @@ import com.example.watchit.data.model.AccountResponse
 import com.example.watchit.data.model.LoginRequest
 import com.example.watchit.data.model.MovieDetail
 import com.example.watchit.data.model.Movies
+import com.example.watchit.data.model.MyWatchListMovies
 import com.example.watchit.data.model.RequestTokenResponse
 import com.example.watchit.data.model.SessionRequest
 import com.example.watchit.data.model.SessionResponse
@@ -35,6 +36,7 @@ interface ApiInterface {
         const val SESSION ="3/authentication/session/new"
         const val ACCOUNT_DETAILS = "3/account"
         const val WATCH_LIST = "3/account/{account_id}/watchlist"
+        const val MY_WATCH_LIST = "3/account/{account_id}/watchlist/movies"
     }
 
     @GET(DETAIL)
@@ -78,4 +80,10 @@ interface ApiInterface {
         @Query("session_id") sessionId: String,
         @Body requestBody: WatchlistRequest
     ): Response<WatchListResponse>
+
+    @GET(MY_WATCH_LIST)
+    suspend fun getMyWatchList(
+        @Path("account_id") accountId: Int,
+        @Query("api_key") apiKey: String = Const.API_KEY
+    ): Response<MyWatchListMovies>
 }
