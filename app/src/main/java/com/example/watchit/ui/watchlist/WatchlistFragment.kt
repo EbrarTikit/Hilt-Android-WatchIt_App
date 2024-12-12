@@ -1,60 +1,116 @@
 package com.example.watchit.ui.watchlist
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.watchit.R
+import com.example.watchit.common.UIState
+import com.example.watchit.databinding.FragmentWatchlistBinding
+import com.example.watchit.ui.movieList.adapter.ListAdapter
+import com.example.watchit.ui.movieList.adapter.MovieClickListener
+import com.example.watchit.ui.watchlist.viewmodel.WatchlistViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [WatchlistFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+@AndroidEntryPoint
 class WatchlistFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var _binding: FragmentWatchlistBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var adapter: ListAdapter
+    private val viewModel by viewModels<WatchlistViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_watchlist, container, false)
+        _binding = FragmentWatchlistBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment WatchlistFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            WatchlistFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        listWatchlist()
+        setupRecyclerView()
+        setupObservers()
+    }
+
+    private fun listWatchlist() {
+        val prefs = requireContext().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        val sessionId = prefs.getString("SESSION_ID", "") ?: ""
+        val accountId = prefs.getInt("ACCOUNT_ID", -1)
+
+        if (sessionId.isNotEmpty() && accountId != -1) {
+            viewModel.getWatchList(
+                accountId = accountId,
+                sessionId = sessionId
+            )
+        } else {
+            Toast.makeText(requireContext(), "Lütfen önce giriş yapın", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun setupObservers() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.watchlist.collect{
+                when(it){
+                    is UIState.Loading -> {
+                        binding.progress.visibility=View.VISIBLE
+                        binding.rvWatchlist.visibility=View.GONE
+                        binding.error.visibility=View.GONE
+                    }
+                    is UIState.Success -> {
+                        binding.progress.visibility=View.GONE
+                        binding.error.visibility=View.GONE
+                        binding.rvWatchlist.visibility=View.VISIBLE
+                        adapter.updateList(it.data.results)
+                    }
+                    is UIState.Failure -> {
+                        binding.progress.visibility=View.GONE
+                        binding.rvWatchlist.visibility=View.GONE
+                        binding.error.visibility=View.VISIBLE
+                        binding.error.text = "Error: ${it.error.message}"
+                    }
                 }
             }
+        }
     }
+
+    private fun setupRecyclerView() {
+        adapter = ListAdapter(emptyList(), object: MovieClickListener{
+            override fun onMovieClicked(movieId: Int?) {
+                movieId?.let {
+                    val action = WatchlistFragmentDirections.actionWatchListFragmentToDetailFragment(it)
+                    findNavController().navigate(action)
+                }
+            }
+
+        })
+        binding.rvWatchlist.adapter = adapter
+        binding.rvWatchlist.layoutManager = LinearLayoutManager(requireContext())
+    }
+
+    override fun onResume() {
+        super.onResume()
+        listWatchlist()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+
+
+
 }

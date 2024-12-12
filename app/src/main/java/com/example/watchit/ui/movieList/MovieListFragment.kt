@@ -78,6 +78,8 @@ class MovieListFragment : Fragment() {
                         binding.rv.visibility = View.GONE
                         binding.error.text = "Error: ${state.error.message}"
                     }
+
+                    else -> {}
                 }
             }
         }

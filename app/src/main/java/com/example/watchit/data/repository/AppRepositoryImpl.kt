@@ -133,10 +133,11 @@ class AppRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getWatchlist(
-        accountId: Int
+        accountId: Int,
+        sessionId: String
     ): Response<MyWatchListMovies> {
         val accId = getAccountId() ?: accountId
-        return api.getMyWatchList(accId)
+        return api.getMyWatchList(accId,sessionId)
     }
 
 
