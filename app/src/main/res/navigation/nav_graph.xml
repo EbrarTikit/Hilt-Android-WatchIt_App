@@ -36,6 +36,9 @@
         android:id="@+id/watchListFragment"
         android:name="com.example.watchit.ui.watchlist.WatchlistFragment"
         android:label="WatchListFragment">
+        <action
+            android:id="@+id/action_watchListFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
     </fragment>
 
     <fragment

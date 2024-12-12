@@ -84,6 +84,7 @@ interface ApiInterface {
     @GET(MY_WATCH_LIST)
     suspend fun getMyWatchList(
         @Path("account_id") accountId: Int,
+        @Query("session_id") sessionId: String,
         @Query("api_key") apiKey: String = Const.API_KEY
     ): Response<MyWatchListMovies>
 }
