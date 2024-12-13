@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.HorizontalScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -16,6 +17,7 @@ import com.example.watchit.common.UIState
 
 import com.example.watchit.databinding.FragmentMovieListBinding
 import com.example.watchit.ui.movieList.adapter.ListAdapter
+import com.example.watchit.ui.movieList.adapter.MovieCardAdapter
 import com.example.watchit.ui.movieList.adapter.MovieClickListener
 import com.example.watchit.ui.movieList.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,7 +29,7 @@ class MovieListFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel by viewModels<MainViewModel>()
-    private lateinit var adapter: ListAdapter
+    private lateinit var adapter: MovieCardAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,16 +47,17 @@ class MovieListFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = ListAdapter(emptyList(), object : MovieClickListener {
-            override fun onMovieClicked(movieId: Int?) {
-                movieId?.let {
-                    val action = MovieListFragmentDirections.actionMovieListFragmentToDetailFragment(it)
-                    findNavController().navigate(action)
-                }
+        adapter = MovieCardAdapter().apply {
+            setOnMovieClickListener { movieId ->
+                val action = MovieListFragmentDirections.actionMovieListFragmentToDetailFragment(movieId)
+                findNavController().navigate(action)
             }
-        })
-        binding.rv.adapter = adapter
-        binding.rv.layoutManager = LinearLayoutManager(requireContext())
+        }
+
+        binding.rv.apply {
+            this.adapter = this@MovieListFragment.adapter
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        }
     }
 
     private fun setupObservers() {
