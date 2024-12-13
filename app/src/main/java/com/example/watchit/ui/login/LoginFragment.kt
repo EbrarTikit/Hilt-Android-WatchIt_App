@@ -48,6 +48,8 @@ class LoginFragment : Fragment() {
             val password = binding.password.text.toString()
 
             if (username.isNotEmpty() && password.isNotEmpty()) {
+                binding.loading.visibility = View.VISIBLE
+                binding.login.text = ""  // Clear button text while loading
                 viewModel.login(username, password)
             }
         }
@@ -64,7 +66,7 @@ class LoginFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                binding.login.isEnabled = binding.username.text.isNotEmpty() && binding.password.text.isNotEmpty()
+                binding.login.isEnabled = binding.username.text!!.isNotEmpty() && binding.password.text!!.isNotEmpty()
             }
         }
 
