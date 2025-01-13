@@ -14,6 +14,7 @@ import com.example.watchit.common.UIState
 import com.example.watchit.databinding.FragmentTrendsBinding
 import com.example.watchit.ui.movieList.adapter.ListAdapter
 import com.example.watchit.ui.movieList.adapter.MovieClickListener
+import com.example.watchit.ui.movieList.adapter.PopularMovieAdapter
 import com.example.watchit.ui.movieList.viewmodel.MainViewModel
 import com.example.watchit.ui.trends.viewmodel.TrendsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,55 +28,55 @@ class TrendsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel by viewModels<TrendsViewModel>()
-    private lateinit var adapter: ListAdapter
+    private val adapter = PopularMovieAdapter()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        //return binding.root
+    ): View {
         _binding = FragmentTrendsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // recall setupRecyclerView() and setupObservers()
         setupRecyclerView()
-        setupObservers()
+        observeData()
+        setupClickListeners()
     }
 
     private fun setupRecyclerView() {
-        // adapter ile onMovieClicked
-        adapter = ListAdapter(emptyList(),object : MovieClickListener{
-            override fun onMovieClicked(movieId: Int?) {
-                movieId?.let{
-                    val action = TrendsFragmentDirections.actionTrendsFragmentToDetailFragment(it)
-                    findNavController().navigate(action)
-                }
-            }
-        })
-        binding.rvTrend.adapter = adapter
-        binding.rvTrend.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvTrend.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = this@TrendsFragment.adapter
+        }
     }
 
-    private fun setupObservers() {
-        // viewModel ile state observe
+    private fun setupClickListeners() {
+        adapter.setOnMovieClickListener { movieId ->
+            findNavController().navigate(
+                TrendsFragmentDirections.actionTrendsFragmentToDetailFragment(movieId)
+            )
+        }
+    }
+
+    private fun observeData() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.trendMovie.collect{ state ->
-                when(state){
-                    is UIState.Success ->{
+            viewModel.trendMovie.collect { state ->
+                when(state) {
+                    is UIState.Success -> {
                         adapter.updateList(state.data.results)
                         binding.rvTrend.visibility = View.VISIBLE
                         binding.progress.visibility = View.GONE
                         binding.error.visibility = View.GONE
                     }
-                    is UIState.Loading ->{
+                    is UIState.Loading -> {
                         binding.progress.visibility = View.VISIBLE
                         binding.rvTrend.visibility = View.GONE
                         binding.error.visibility = View.GONE
                     }
-                    is UIState.Failure ->{
+                    is UIState.Failure -> {
                         binding.error.visibility = View.VISIBLE
                         binding.rvTrend.visibility = View.GONE
                         binding.progress.visibility = View.GONE
@@ -83,7 +84,6 @@ class TrendsFragment : Fragment() {
                 }
             }
         }
-
     }
 
     override fun onDestroyView() {

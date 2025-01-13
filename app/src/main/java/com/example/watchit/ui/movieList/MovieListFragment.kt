@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.watchit.common.UIState
 import com.example.watchit.databinding.FragmentMovieListBinding
@@ -54,12 +55,16 @@ class MovieListFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
-        mainAdapter.setOnMovieClickListener { movieId ->
-            // Navigate to detail
+        mainAdapter.setOnMovieClickListener{
+            findNavController().navigate(
+                MovieListFragmentDirections.actionMovieListFragmentToDetailFragment(it)
+            )
         }
 
         upcomingAdapter.setOnMovieClickListener { movieId ->
-            // Navigate to detail
+            findNavController().navigate(
+                MovieListFragmentDirections.actionMovieListFragmentToDetailFragment(movieId)
+            )
         }
     }
 
