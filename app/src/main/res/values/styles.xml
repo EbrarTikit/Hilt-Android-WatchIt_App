@@ -1,28 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="FragmentTitle">
-        <item name="android:textSize">28sp</item>
+    <!-- Temel metin stilleri -->
+    <style name="TextAppearance.App.Title" parent="TextAppearance.MaterialComponents.Headline5">
         <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">24sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:layout_margin">16dp</item>
     </style>
 
-    <style name="MovieCard">
-        <item name="cardBackgroundColor">@color/card_background</item>
-        <item name="cardCornerRadius">12dp</item>
+    <style name="TextAppearance.App.Subtitle" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- Kart stilleri -->
+    <style name="MovieCard" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/surface</item>
         <item name="cardElevation">4dp</item>
-        <item name="android:layout_marginHorizontal">12dp</item>
-        <item name="android:layout_marginVertical">6dp</item>
+        <item name="cardCornerRadius">12dp</item>
+        <item name="android:layout_marginHorizontal">16dp</item>
+        <item name="android:layout_marginVertical">8dp</item>
+        <item name="rippleColor">@color/accent</item>
     </style>
 
+    <!-- Yuvarlak köşeler -->
     <style name="RoundedCorners">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">8dp</item>
     </style>
 
+    <!-- Fragment başlık stili -->
+    <style name="FragmentTitle" parent="TextAppearance.App.Title">
+        <item name="android:layout_margin">16dp</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <!-- Bottom Navigation stili -->
+    <style name="BottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="backgroundTint">@color/surface</item>
+        <item name="itemIconTint">@color/bottom_nav_item_color</item>
+        <item name="itemTextColor">@color/bottom_nav_item_color</item>
+        <item name="elevation">8dp</item>
+    </style>
+
     <style name="RoundedCornersTop">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSizeTopLeft">8dp</item>
-        <item name="cornerSizeTopRight">8dp</item>
+        <item name="cornerSizeTopLeft">12dp</item>
+        <item name="cornerSizeTopRight">12dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
+    <style name="SectionTitle" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="MovieCardTitle" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="MovieCardRating" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:background">@drawable/rating_background</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:drawableStart">@drawable/ic_star</item>
+        <item name="android:drawablePadding">4dp</item>
     </style>
 </resources> 

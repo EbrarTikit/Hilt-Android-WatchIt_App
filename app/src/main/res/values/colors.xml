@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Ana renkler -->
-    <color name="primary">#1F1F1F</color>
-    <color name="primary_dark">#121212</color>
-    <color name="accent">#BB86FC</color>
-    <color name="accent_variant">#3700B3</color>
+    <color name="primary">#1F1D2B</color>
+    <color name="primary_dark">#171621</color>
+    <color name="accent">#FF8F71</color>
+    <color name="accent_variant">#E07C60</color>
 
     <!-- Arka plan renkleri -->
-    <color name="background">#121212</color>
-    <color name="surface">#1E1E1E</color>
-    <color name="card_background">#2D2D2D</color>
+    <color name="background">#171621</color>
+    <color name="surface">#1F1D2B</color>
+    <color name="card_background">#252836</color>
+    <color name="overlay_dark">#80000000</color>
 
     <!-- Metin renkleri -->
     <color name="text_primary">#FFFFFF</color>
-    <color name="text_secondary">#B3FFFFFF</color>
-    <color name="text_hint">#80FFFFFF</color>
+    <color name="text_secondary">#92929D</color>
+    <color name="text_hint">#696974</color>
 
     <!-- Diğer renkler -->
     <color name="error">#CF6679</color>
@@ -24,4 +25,13 @@
     <!-- Eksik renkler -->
     <color name="grey">#757575</color>
     <color name="black">#000000</color>
+
+    <!-- Özel renkler -->
+    <color name="rating_good">#15D2BC</color>
+    <color name="rating_medium">#E4D93E</color>
+    <color name="rating_bad">#FF5252</color>
+    
+    <!-- Gradient renkler -->
+    <color name="gradient_start">#171621</color>
+    <color name="gradient_end">#FF8F71</color>
 </resources>

@@ -4,23 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.HorizontalScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.navigation.fragment.findNavController
-import com.example.watchit.R
 import com.example.watchit.common.UIState
-
 import com.example.watchit.databinding.FragmentMovieListBinding
-import com.example.watchit.ui.movieList.adapter.ListAdapter
 import com.example.watchit.ui.movieList.adapter.MovieCardAdapter
-import com.example.watchit.ui.movieList.adapter.MovieClickListener
+import com.example.watchit.ui.movieList.adapter.PopularMovieAdapter
 import com.example.watchit.ui.movieList.viewmodel.MainViewModel
-import com.example.watchit.ui.trends.TrendsFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -28,10 +20,10 @@ import kotlinx.coroutines.launch
 class MovieListFragment : Fragment() {
     private var _binding: FragmentMovieListBinding? = null
     private val binding get() = _binding!!
-
-    private val viewModel by viewModels<MainViewModel>()
-    private lateinit var adapter: MovieCardAdapter
-    private lateinit var adapter2: ListAdapter
+    private val viewModel: MainViewModel by viewModels()
+    
+    private val mainAdapter = MovieCardAdapter()
+    private val upcomingAdapter = PopularMovieAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,58 +36,50 @@ class MovieListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupRecyclerView()
-        setupObservers()
+        setupRecyclerViews()
+        setupClickListeners()
+        observeData()
     }
 
-    private fun setupRecyclerView() {
-        adapter = MovieCardAdapter().apply {
-            setOnMovieClickListener { movieId ->
-                val action = MovieListFragmentDirections.actionMovieListFragmentToDetailFragment(movieId)
-                findNavController().navigate(action)
-            }
-        }
-
-        binding.rv.apply {
-            this.adapter = this@MovieListFragment.adapter
+    private fun setupRecyclerViews() {
+        binding.trendingRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = mainAdapter
         }
 
-        adapter2 = ListAdapter(emptyList(),object : MovieClickListener{
-            override fun onMovieClicked(movieId: Int?) {
-                movieId?.let{
-                    val action = MovieListFragmentDirections.actionMovieListFragmentToDetailFragment(movieId)
-                    findNavController().navigate(action)
-                }
-            }
-        })
-        binding.rvUpcoming.adapter = adapter2
-        binding.rvUpcoming.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        binding.popularRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = upcomingAdapter
+        }
     }
 
-    private fun setupObservers() {
+    private fun setupClickListeners() {
+        mainAdapter.setOnMovieClickListener { movieId ->
+            // Navigate to detail
+        }
+
+        upcomingAdapter.setOnMovieClickListener { movieId ->
+            // Navigate to detail
+        }
+    }
+
+    private fun observeData() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.mainItem.collect { state ->
                 when (state) {
                     is UIState.Loading -> {
-                        binding.progress.visibility = View.VISIBLE
-                        binding.rv.visibility = View.GONE
-                        binding.error.visibility = View.GONE
+                        binding.trendingProgress.visibility = View.VISIBLE
+                        binding.trendingError.visibility = View.GONE
                     }
                     is UIState.Success -> {
-                        binding.progress.visibility = View.GONE
-                        binding.rv.visibility = View.VISIBLE
-                        binding.error.visibility = View.GONE
-                        adapter.updateList(state.data.results)
+                        binding.trendingProgress.visibility = View.GONE
+                        binding.trendingError.visibility = View.GONE
+                        mainAdapter.updateList(state.data.results)
                     }
                     is UIState.Failure -> {
-                        binding.progress.visibility = View.GONE
-                        binding.error.visibility = View.VISIBLE
-                        binding.rv.visibility = View.GONE
-                        binding.error.text = "Error: ${state.error.message}"
+                        binding.trendingProgress.visibility = View.GONE
+                        binding.trendingError.visibility = View.VISIBLE
                     }
-
-                    else -> {}
                 }
             }
         }
@@ -104,28 +88,21 @@ class MovieListFragment : Fragment() {
             viewModel.upcoming.collect { state ->
                 when (state) {
                     is UIState.Loading -> {
-                        binding.progress.visibility = View.VISIBLE
-                        binding.rvUpcoming.visibility = View.GONE
-                        binding.error.visibility = View.GONE
+                        binding.popularProgress.visibility = View.VISIBLE
+                        binding.popularError.visibility = View.GONE
                     }
                     is UIState.Success -> {
-                        binding.progress.visibility = View.GONE
-                        binding.rvUpcoming.visibility = View.VISIBLE
-                        binding.error.visibility = View.GONE
-                        adapter2.updateList(state.data.results)
+                        binding.popularProgress.visibility = View.GONE
+                        binding.popularError.visibility = View.GONE
+                        upcomingAdapter.updateList(state.data.results)
                     }
                     is UIState.Failure -> {
-                        binding.progress.visibility = View.GONE
-                        binding.error.visibility = View.VISIBLE
-                        binding.rvUpcoming.visibility = View.GONE
-                        binding.error.text = "Error: ${state.error.message}"
+                        binding.popularProgress.visibility = View.GONE
+                        binding.popularError.visibility = View.VISIBLE
                     }
-
-                    else -> {}
                 }
             }
         }
-
     }
 
     override fun onDestroyView() {
