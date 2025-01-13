@@ -140,5 +140,9 @@ class AppRepositoryImpl @Inject constructor(
         return api.getMyWatchList(accId,sessionId)
     }
 
+    override suspend fun getUpcoming(): Response<Movies> {
+        return api.getUpcoming()
+    }
+
 
 }
