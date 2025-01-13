@@ -1,6 +1,7 @@
 package com.example.watchit.data.network
 
 import com.example.watchit.common.Const
+import com.example.watchit.data.model.AccountDetails
 import com.example.watchit.data.model.AccountResponse
 import com.example.watchit.data.model.LoginRequest
 import com.example.watchit.data.model.MovieDetail
@@ -95,5 +96,22 @@ interface ApiInterface {
         @Query("api_key") apiKey: String = Const.API_KEY
     ): Response<MyWatchListMovies>
 
+    @GET("account/{account_id}")
+    suspend fun getAccountDetails(
+        @Path("account_id") accountId: Int,
+        @Query("session_id") sessionId: String
+    ): Response<AccountDetails>
+
+    @GET("account/{account_id}/rated/movies")
+    suspend fun getRatedMovies(
+        @Path("account_id") accountId: Int,
+        @Query("session_id") sessionId: String
+    ): Response<Movies>
+
+    @GET("account/{account_id}/watchlist/movies")
+    suspend fun getWatchlist(
+        @Path("account_id") accountId: Int,
+        @Query("session_id") sessionId: String
+    ): Response<Movies>
 
 }

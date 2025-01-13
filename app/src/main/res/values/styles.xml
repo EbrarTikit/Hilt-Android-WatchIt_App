@@ -75,4 +75,9 @@
         <item name="android:drawableStart">@drawable/ic_star</item>
         <item name="android:drawablePadding">4dp</item>
     </style>
+
+    <style name="CircleImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
 </resources> 

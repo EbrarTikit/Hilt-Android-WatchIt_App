@@ -12,6 +12,7 @@ import com.example.watchit.data.model.SessionResponse
 import com.example.watchit.data.model.TrendMovie
 import com.example.watchit.data.model.WatchListResponse
 import com.example.watchit.data.model.WatchlistRequest
+import com.example.watchit.data.model.AccountDetails
 import com.example.watchit.data.network.ApiInterface
 import com.example.watchit.domain.repository.AppRepository
 import retrofit2.HttpException
@@ -144,5 +145,17 @@ class AppRepositoryImpl @Inject constructor(
         return api.getUpcoming(page)
     }
 
+    override suspend fun getAccountDetails(sessionId: String, accountId: Int): AccountDetails {
+        return api.getAccountDetails(accountId, sessionId).body() 
+            ?: throw Exception("Account details not found")
+    }
+
+    override suspend fun getWatchlistCount(accountId: Int, sessionId: String): Int {
+        return api.getWatchlist(accountId, sessionId).body()?.totalResults ?: 0
+    }
+
+    override suspend fun getRatedMoviesCount(accountId: Int, sessionId: String): Int {
+        return api.getRatedMovies(accountId, sessionId).body()?.totalResults ?: 0
+    }
 
 }

@@ -8,6 +8,7 @@ import com.example.watchit.data.model.SessionResponse
 import com.example.watchit.data.model.TrendMovie
 import com.example.watchit.data.model.WatchListResponse
 import com.example.watchit.data.model.WatchlistRequest
+import com.example.watchit.data.model.AccountDetails
 import retrofit2.Response
 
 
@@ -20,4 +21,7 @@ interface AppRepository {
     suspend fun addWatchlist(accountId: Int, sessionId: String,request: WatchlistRequest): Response<WatchListResponse>
     suspend fun getWatchlist(accountId: Int,sessionId: String): Response<MyWatchListMovies>
     suspend fun getUpcoming(page: Int): Response<Movies>
+    suspend fun getAccountDetails(sessionId: String, accountId: Int): AccountDetails
+    suspend fun getWatchlistCount(accountId: Int, sessionId: String): Int
+    suspend fun getRatedMoviesCount(accountId: Int, sessionId: String): Int
 }
