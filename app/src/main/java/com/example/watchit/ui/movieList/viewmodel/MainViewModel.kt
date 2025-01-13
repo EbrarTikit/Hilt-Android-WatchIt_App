@@ -23,8 +23,28 @@ class MainViewModel @Inject constructor(
     private val _mainItem = MutableStateFlow<UIState<Movies>>(UIState.Loading)
     val mainItem: StateFlow<UIState<Movies>> = _mainItem
 
+    private val _upcoming = MutableStateFlow<UIState<Movies>> (UIState.Loading)
+    val upcoming: StateFlow<UIState<Movies>> = _upcoming
+
     init {
         fetchMovies(page = 1)
+        fetchUpcomingMovies(page = 1)
+    }
+
+    fun fetchUpcomingMovies(page: Int){
+        viewModelScope.launch {
+            try {
+                val response = repository.getUpcoming(page)
+                if (response.isSuccessful) {
+                    _upcoming.value = UIState.Success(response.body() ?: Movies(0, emptyList(), 0, 0))
+                } else {
+                    _upcoming.value = UIState.Failure(Throwable("Failed to fetch movies"), Movies(0, emptyList(), 0, 0))
+                }
+            } catch (e: Exception) {
+                _upcoming.value = UIState.Failure(e, Movies(0, emptyList(), 0, 0))
+            }
+        }
+
     }
 
     fun fetchMovies(page: Int) {
