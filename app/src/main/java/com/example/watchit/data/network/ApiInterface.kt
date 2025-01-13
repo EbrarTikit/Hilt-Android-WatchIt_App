@@ -21,12 +21,6 @@ import retrofit2.http.Query
 
 interface ApiInterface {
 
-    @GET(TOP_RATED)
-    suspend fun getMovies(
-        @Query("page") page: Int,
-        @Query("api_key") apiKey: String = Const.API_KEY
-    ): Response<Movies>
-
     companion object {
         const val TOP_RATED = "3/movie/top_rated"
         const val DETAIL = "3/movie/{movieId}"
@@ -37,7 +31,14 @@ interface ApiInterface {
         const val ACCOUNT_DETAILS = "3/account"
         const val WATCH_LIST = "3/account/{account_id}/watchlist"
         const val MY_WATCH_LIST = "3/account/{account_id}/watchlist/movies"
+        const val UP_COMING = "3/movie/upcoming"
     }
+
+    @GET(TOP_RATED)
+    suspend fun getMovies(
+        @Query("page") page: Int,
+        @Query("api_key") apiKey: String = Const.API_KEY
+    ): Response<Movies>
 
     @GET(DETAIL)
     suspend fun getMovieDetail(
@@ -49,6 +50,11 @@ interface ApiInterface {
     suspend fun getTrends(
         @Query("api_key") apiKey: String = Const.API_KEY
     ): Response<TrendMovie>
+
+    @GET(UP_COMING)
+    suspend fun getUpcoming(
+        @Query("api_key") apiKey: String = Const.API_KEY
+    ): Response<Movies>
 
     @GET(GET_TOKEN)
     suspend fun createRequestToken(
@@ -87,4 +93,6 @@ interface ApiInterface {
         @Query("session_id") sessionId: String,
         @Query("api_key") apiKey: String = Const.API_KEY
     ): Response<MyWatchListMovies>
+
+
 }

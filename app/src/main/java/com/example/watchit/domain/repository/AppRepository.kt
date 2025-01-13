@@ -19,4 +19,5 @@ interface AppRepository {
     suspend fun login(username: String, password: String): Result<SessionResponse>
     suspend fun addWatchlist(accountId: Int, sessionId: String,request: WatchlistRequest): Response<WatchListResponse>
     suspend fun getWatchlist(accountId: Int,sessionId: String): Response<MyWatchListMovies>
+    suspend fun getUpcoming(): Response<Movies>
 }
