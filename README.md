@@ -59,7 +59,7 @@ The app uses a sealed class `UIState` for handling different states
 ## App Design
 <!-- First Row -->
 <p align="center">
-  <img src="https://github.com/EbrarTikit/HungryApp/blob/master/Screenshots/Screenshot_20230803_170516.png" alt="Image 1" width="30%">
+  <img src="https://github.com/EbrarTikit/Hilt-Android-WatchIt_App/blob/master/Screenshots/home.png" alt="Image 1" width="30%">
   <img src="https://github.com/EbrarTikit/Hilt-Android-WatchIt_App/blob/master/Screenshots/detail.png" alt="Image 2" width="30%">
   <img src="https://github.com/EbrarTikit/Hilt-Android-WatchIt_App/blob/master/Screenshots/Log%20in.png" alt="Image 3" width="30%">
 </p>
