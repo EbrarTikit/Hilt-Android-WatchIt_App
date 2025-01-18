@@ -20,20 +20,20 @@ WatchIt is a modern Android application built with Kotlin that allows users to d
 - **UI Components**: Material Design Components
 
 ## Project Structure
-app/
-├── data/
-│ ├── model/ # Data models and entities
-│ ├── network/ # API interfaces and network configuration
-│ └── repository/ # Repository implementations
-├── di/ # Dependency injection modules
-├── domain/
-│ └── repository/ # Repository interfaces
-├── ui/
-│ ├── movieDetail/ # Movie details screen
-│ ├── movieList/ # Movie listing screen
-│ ├── profile/ # User profile screen
-│ └── watchlist/ # Watchlist management
-└── common/ # Shared utilities and constants
+- app/
+- ├── data/
+- │ ├── model/ # Data models and entities
+- │ ├── network/ # API interfaces and network configuration
+- │ └── repository/ # Repository implementations
+- ├── di/ # Dependency injection modules
+- ├── domain/
+- │ └── repository/ # Repository interfaces
+- ├── ui/
+- │ ├── movieDetail/ # Movie details screen
+- │ ├── movieList/ # Movie listing screen
+- │ ├── profile/ # User profile screen
+- │ └── watchlist/ # Watchlist management
+- └── common/ # Shared utilities and constants
 
 
 ## Architecture
@@ -57,6 +57,19 @@ The application follows Clean Architecture principles with MVVM pattern:
 The app uses a sealed class `UIState` for handling different states
 
 ## App Design
+<!-- First Row -->
+<p align="center">
+  <img src="https://github.com/EbrarTikit/HungryApp/blob/master/Screenshots/Screenshot_20230803_170516.png" alt="Image 1" width="30%">
+  <img src="https://github.com/EbrarTikit/Hilt-Android-WatchIt_App/blob/master/Screenshots/detail.png" alt="Image 2" width="30%">
+  <img src="https://github.com/EbrarTikit/Hilt-Android-WatchIt_App/blob/master/Screenshots/Log%20in.png" alt="Image 3" width="30%">
+</p>
+
+<!-- Second Row -->
+<p align="center">
+  <img src="https://github.com/EbrarTikit/Hilt-Android-WatchIt_App/blob/master/Screenshots/trends.png" alt="Image 4" width="30%">
+  <img src="https://github.com/EbrarTikit/Hilt-Android-WatchIt_App/blob/master/Screenshots/watchlist.png" alt="Image 5" width="30%">
+</p>
+
 
 ## Getting Started
 
@@ -69,6 +82,31 @@ The app uses a sealed class `UIState` for handling different states
 1. Clone the repository
 2. Add your TMDb API key in `common/Const.kt`
 3. Build and run the project
+
+## Authentication
+The app uses TMDb (The Movie Database) API for authentication. To use the app:
+
+1. Create a TMDb account at [themoviedb.org](https://www.themoviedb.org/signup)
+2. Log in to the app using your TMDb credentials
+3. After successful authentication, you can:
+   - Add movies to your watchlist
+   - View your profile information
+   - Access your movie ratings
+   - Manage your watchlist
+
+### Authentication Flow
+1. The app requests a token from TMDb API
+2. User enters their TMDb username and password
+3. The app validates the token with provided credentials
+4. Upon successful validation, a session is created
+5. Session ID is stored securely for subsequent requests
+
+### Implementation Details
+The authentication is implemented using:
+- Secure token-based authentication
+- Session management
+- Encrypted credential transmission
+- Persistent session storage
 
 ## Acknowledgments
 - [The Movie Database (TMDb)](https://www.themoviedb.org/) for providing the movie data API
