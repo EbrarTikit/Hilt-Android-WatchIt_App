@@ -3,8 +3,8 @@
     <!-- Ana renkler -->
     <color name="primary">#1F1D2B</color>
     <color name="primary_dark">#171621</color>
-    <color name="accent">#FF8F71</color>
-    <color name="accent_variant">#E07C60</color>
+    <color name="accent">#BB86FC</color>
+    <color name="accent_variant">#5128B6</color>
 
     <!-- Arka plan renkleri -->
     <color name="background">#171621</color>
@@ -34,4 +34,5 @@
     <!-- Gradient renkler -->
     <color name="gradient_start">#171621</color>
     <color name="gradient_end">#FF8F71</color>
+
 </resources>
