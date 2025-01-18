@@ -8,21 +8,28 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.watchit.R
 import com.example.watchit.data.model.Result
+import androidx.core.content.ContextCompat
+import com.example.watchit.common.loadImage
+import com.example.watchit.databinding.MainItemBinding
 
-class ListViewHolder(val container: ViewGroup) : RecyclerView.ViewHolder(
-    LayoutInflater.from(container.context).inflate(R.layout.main_item, container, false)
+class ListViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
+    LayoutInflater.from(parent.context).inflate(R.layout.main_item, parent, false)
 ) {
+    private val binding = MainItemBinding.bind(itemView)
 
-    val movieName: TextView = itemView.findViewById(R.id.mtv)
-    val movieImg: ImageView = itemView.findViewById(R.id.img)
-
-    fun bind(movData: Result) {
-        val posterBaseUrl = "https://image.tmdb.org/t/p/w500/"
-        movieName.text = movData.title
-        Glide.with(itemView.context)
-            .load(posterBaseUrl + movData.posterPath)
-            .placeholder(R.drawable.ic_launcher_foreground)
-            .error(R.drawable.error_img)
-            .into(movieImg)
+    fun bind(movie: Result) {
+        binding.apply {
+            mtv.text = movie.title
+            img.loadImage(movie.posterPath)
+            rating.text = String.format("%.1f", movie.voteAverage)
+            
+            // Puana göre renk değiştirme
+            val ratingColor = when {
+                movie.voteAverage >= 7.0 -> ContextCompat.getColor(itemView.context, R.color.rating_good)
+                movie.voteAverage >= 5.0 -> ContextCompat.getColor(itemView.context, R.color.rating_medium)
+                else -> ContextCompat.getColor(itemView.context, R.color.rating_bad)
+            }
+            rating.setTextColor(ratingColor)
+        }
     }
 }

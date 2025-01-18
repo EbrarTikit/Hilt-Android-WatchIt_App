@@ -42,6 +42,8 @@ class MovieCardAdapter : RecyclerView.Adapter<MovieCardAdapter.MovieViewHolder>(
         fun bind(movie: Result) {
             binding.apply {
                 moviePoster.loadImage(movie.posterPath)
+                movieTitle.text = movie.title
+                movieRating.text = String.format("%.1f", movie.voteAverage)
                 root.setOnClickListener {
                     onMovieClickListener?.invoke(movie.id)
                 }

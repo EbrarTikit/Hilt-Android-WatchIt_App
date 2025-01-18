@@ -7,6 +7,7 @@ import com.example.watchit.data.model.MyWatchListMovies
 import com.example.watchit.domain.repository.AppRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,25 +16,34 @@ class WatchlistViewModel @Inject constructor(
     private val repository: AppRepository
 ) : ViewModel() {
 
-    private val _watchlist = MutableStateFlow<UIState<MyWatchListMovies>>(UIState.Loading)
-    val watchlist: MutableStateFlow<UIState<MyWatchListMovies>> = _watchlist
+    private val _watchlistMovies = MutableStateFlow<UIState<MyWatchListMovies>>(UIState.Loading)
+    val watchlistMovies: StateFlow<UIState<MyWatchListMovies>> = _watchlistMovies
 
-    fun getWatchList(
-        accountId: Int,
-        sessionId: String
-    ) {
+    fun getWatchList(accountId: Int, sessionId: String) {
         viewModelScope.launch {
             try {
-                val response = repository.getWatchlist(accountId,sessionId)
+                val response = repository.getWatchlist(accountId, sessionId)
                 if (response.isSuccessful) {
-                    _watchlist.value = UIState.Success(response.body() ?: MyWatchListMovies(0, emptyList(), 0, 0))
+                    response.body()?.let { watchlist ->
+                        _watchlistMovies.value = UIState.Success(watchlist)
+                    } ?: run {
+                        _watchlistMovies.value = UIState.Failure(
+                            Throwable("Empty response"),
+                            MyWatchListMovies(0, emptyList(), 0, 0)
+                        )
+                    }
                 } else {
-                    _watchlist.value = UIState.Failure(Throwable("Failed to fetch watchlist"), MyWatchListMovies(0, emptyList(), 0, 0))
+                    _watchlistMovies.value = UIState.Failure(
+                        Throwable("Request failed: ${response.message()}"),
+                        MyWatchListMovies(0, emptyList(), 0, 0)
+                    )
                 }
             } catch (e: Exception) {
-                _watchlist.value = UIState.Failure(e, MyWatchListMovies(0, emptyList(), 0, 0))
+                _watchlistMovies.value = UIState.Failure(
+                    e,
+                    MyWatchListMovies(0, emptyList(), 0, 0)
+                )
             }
         }
     }
-
 }
